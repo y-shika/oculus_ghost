@@ -49,15 +49,15 @@ extern int va_canny_arg1;
 extern int va_canny_arg2;
 
 extern bool va_init(unsigned int height, unsigned int width, unsigned int pixelsize);
-extern unsigned char* va_effect(unsigned char* src, unsigned int height, unsigned int width, unsigned int pixelsize, float x, float y, float z);
+extern unsigned char* va_effect(unsigned char* src, unsigned int height, unsigned int width, unsigned int pixelsize);
 extern bool va_close();
 
 float x;
 float y;
 float z;
 
-boolean record_mode = false;
-boolean play_mode = false;
+//boolean record_mode = false;
+//boolean play_mode = false;
 
 struct ListNode
 {
@@ -138,112 +138,6 @@ struct OculusTexture
 		TextureSet->CurrentIndex = (TextureSet->CurrentIndex + 1) % TextureSet->TextureCount;
 	}
 };
-
-void appendL(float x, float y, float z)
-{
-	ListNode *newNode;  // 新たなノード
-	ListNode *nodePtr;  // リスト内を移動する用のノード
-
-						// 新たなノードのメモリを割り当て、
-						// valueにnumを代入、
-						// nextにNULLをセット
-	newNode = new ListNode;
-	newNode->x = x;
-	newNode->y = y;
-	newNode->z = z;
-	newNode->next = NULL;
-
-	// リストにノードがなければ、
-	// newNodeを最初のノードにする
-	if (!headL)
-	{
-		headL = newNode;
-	}
-	else  // そうでなければ、最後にnewNodeを挿入する
-	{
-		// nodePtrをリストの先頭として初期化する
-		nodePtr = headL;
-
-		// リストの最後のノード（nodePtr->nextがnull）を見つける
-		// nodePtr->nextがnullであるとき、ループを出る
-		while (nodePtr->next)
-		{
-			nodePtr = nodePtr->next;
-		}
-
-		// 最後のノードとしてnewNodeを挿入する
-		nodePtr->next = newNode;
-	}
-
-}
-
-void appendR(float x, float y, float z)
-{
-	ListNode *newNode;  // 新たなノード
-	ListNode *nodePtr;  // リスト内を移動する用のノード
-
-						// 新たなノードのメモリを割り当て、
-						// valueにnumを代入、
-						// nextにNULLをセット
-	newNode = new ListNode;
-	newNode->x = x;
-	newNode->y = y;
-	newNode->z = z;
-	newNode->next = NULL;
-
-	// リストにノードがなければ、
-	// newNodeを最初のノードにする
-	if (!headR)
-	{
-		headR = newNode;
-	}
-	else  // そうでなければ、最後にnewNodeを挿入する
-	{
-		// nodePtrをリストの先頭として初期化する
-		nodePtr = headR;
-
-		// リストの最後のノード（nodePtr->nextがnull）を見つける
-		// nodePtr->nextがnullであるとき、ループを出る
-		while (nodePtr->next)
-		{
-			nodePtr = nodePtr->next;
-		}
-
-		// 最後のノードとしてnewNodeを挿入する
-		nodePtr->next = newNode;
-	}
-
-}
-
-void pickL()
-{
-	if (!headL)
-	{
-		return;
-	}
-	else
-	{
-		x = headL->x;
-		y = headL->y;
-		z = headL->z;
-		headL = headL->next;
-	}
-}
-
-void pickR()
-{
-	if (!headR)
-	{
-		return;
-	}
-	else
-	{
-		x = headR->x;
-		y = headR->y;
-		z = headR->z;
-		headR = headR->next;
-	}
-}
 
 /*
 void start(ovrHmd hmd)
@@ -411,16 +305,6 @@ static bool MainLoop(bool retryCreate)
 		}
 		*/
 
-		if (DIRECTX.Key['1']) {
-			record_mode = true;
-		}
-		if (DIRECTX.Key['2']) {
-			record_mode = false;
-		}
-		if (DIRECTX.Key['3']) {
-			play_mode = true;
-		}
-
 		// Get both eye poses simultaneously, with IPD offset already included. 
 		ovrPosef         EyeRenderPose[2];
 		ovrVector3f      HmdToEyeViewOffset[2] = { eyeRenderDesc[0].HmdToEyeViewOffset,
@@ -433,31 +317,6 @@ static bool MainLoop(bool retryCreate)
 		
 		ovrvision.PreStoreCamData(OVR::Camqt::OV_CAMQT_DMSRMP);
 
-		/*
-		if (record_mode) {
-			appendL(EyeRenderPose[0].Position.x, EyeRenderPose[0].Position.y, EyeRenderPose[0].Position.z);
-			appendR(EyeRenderPose[1].Position.x, EyeRenderPose[1].Position.y, EyeRenderPose[1].Position.z);
-		}
-
-		if (play_mode) {
-			while (headL != NULL) {
-				pickL();
-				cv::circle(graph1, cv::Point(x * 200 + 250, -y * 200 + 250), 1, cv::Scalar(255, 0, 0), -1, CV_AA, 0);
-				cv::imshow("XY", graph1);
-				cv::circle(graph2, cv::Point(x * 200 + 250, -z * 200 + 250), 1, cv::Scalar(0, 255, 0), -1, CV_AA, 0);
-				cv::imshow("XZ", graph2);
-				cv::circle(graph3, cv::Point(-y * 200 + 250, -z * 200 + 250), 1, cv::Scalar(0, 0, 255), -1, CV_AA, 0);
-				cv::imshow("YZ", graph3);
-				Sleep(5 * 100);
-			}
-			play_mode = false;
-		}
-		*/
-
-		
-		appendL(EyeRenderPose[0].Position.x, EyeRenderPose[0].Position.y, EyeRenderPose[0].Position.z);
-		appendR(EyeRenderPose[1].Position.x, EyeRenderPose[1].Position.y, EyeRenderPose[1].Position.z);
-
 		cv::circle(graph1, cv::Point(EyeRenderPose[0].Position.x * 200 + 250, - EyeRenderPose[0].Position.y * 200 + 250), 1, cv::Scalar(255, 0, 0), -1, CV_AA, 0);
 		cv::imshow("XY", graph1);
 		cv::circle(graph2, cv::Point(EyeRenderPose[0].Position.x * 200 + 250, - EyeRenderPose[0].Position.z * 200 + 250), 1, cv::Scalar(0, 255, 0), -1, CV_AA, 0);
@@ -467,15 +326,6 @@ static bool MainLoop(bool retryCreate)
 
 		// 標準出力へ座標(左目)を出力
 		std::cout << EyeRenderPose[0].Position.x * 100 << ", " << EyeRenderPose[0].Position.y * 100 << ", " << EyeRenderPose[0].Position.z * 100 << std::endl;
-
-		/*
-		if (DIRECTX.Key['1']) {
-			float x = HmdToEyeViewOffset[0].x;
-			float y = HmdToEyeViewOffset[0].y;
-			float z = HmdToEyeViewOffset[0].z;
-			start(x, y, z);
-		}
-		*/
 
 		// Render Scene to Eye Buffers
         if (isVisible)
@@ -519,7 +369,7 @@ static bool MainLoop(bool retryCreate)
 				if (eye == 0) {
 					//SetCamImage(DIRECTX.Context, ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_LEFT), width*pixelsize);
 					SetCamImage(DIRECTX.Context,
-						va_effect(ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_LEFT), width, height, pixelsize, EyeRenderPose[0].Position.x, EyeRenderPose[0].Position.y, EyeRenderPose[0].Position.z),
+						va_effect(ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_LEFT), width, height, pixelsize),
 						width*pixelsize);
 					/*SetCamImage(DIRECTX.Context,
 						ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_LEFT),
@@ -532,7 +382,7 @@ static bool MainLoop(bool retryCreate)
 						ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_RIGHT),
 						width*pixelsize);*/
 					SetCamImage(DIRECTX.Context,
-						va_effect(ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_RIGHT), width, height, pixelsize, EyeRenderPose[1].Position.x, EyeRenderPose[1].Position.y, EyeRenderPose[1].Position.z),
+						va_effect(ovrvision.GetCamImageBGRA(OVR::Cameye::OV_CAMEYE_RIGHT), width, height, pixelsize),
 						width*pixelsize);
 				}
 				

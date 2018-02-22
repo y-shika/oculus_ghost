@@ -59,6 +59,7 @@ float z;
 //boolean record_mode = false;
 //boolean play_mode = false;
 
+/*
 struct ListNode
 {
 	float x;
@@ -68,6 +69,7 @@ struct ListNode
 };
 ListNode *headL = NULL;
 ListNode *headR = NULL;
+*/
 
 //------------------------------------------------------------
 // ovrSwapTextureSet wrapper class that also maintains the render target views

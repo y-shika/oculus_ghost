@@ -464,7 +464,9 @@ static bool MainLoop(bool retryCreate)
 		cv::imshow("XZ", graph2);
 		cv::circle(graph3, cv::Point(- EyeRenderPose[0].Position.y * 200 + 250, - EyeRenderPose[0].Position.z * 200 + 250), 1, cv::Scalar(0, 0, 255), -1, CV_AA, 0);
 		cv::imshow("YZ", graph3);
-		
+
+		// 標準出力へ座標(左目)を出力
+		std::cout << EyeRenderPose[0].Position.x * 100 << ", " << EyeRenderPose[0].Position.y * 100 << ", " << EyeRenderPose[0].Position.z * 100 << std::endl;
 
 		/*
 		if (DIRECTX.Key['1']) {
@@ -587,6 +589,16 @@ Done:
     return retryCreate || OVR_SUCCESS(result) || (result == ovrError_DisplayLost);
 }
 
+// コンソール表示用
+void DispConsole()
+{
+	AllocConsole();
+	FILE* fp = NULL;
+
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+}
+
 //-------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 {
@@ -595,6 +607,8 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	VALIDATE(OVR_SUCCESS(result), "Failed to initialize libOVR.");
 
     VALIDATE(DIRECTX.InitWindow(hinst, L"Ovrvision Pro for OculusSDK"), "Failed to open window.");
+
+	DispConsole();
 
     DIRECTX.Run(MainLoop);
 

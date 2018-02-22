@@ -43,16 +43,16 @@ unsigned char* va_effect(unsigned char* src, unsigned int width, unsigned int he
 	if (!_va_init) return NULL;
 	if (_va_width != width || _va_height != height || _va_pixelsize != pixelsize) return NULL;
 
-	std::stringstream ss;
-	ss << x << ", " << y << ", " << z;
+	//std::stringstream ss;
+	//ss << x << ", " << y << ", " << z;
 
 	memcpy(cv_src.data, src, _va_width * _va_height * _va_pixelsize);
 	cv::cvtColor(cv_src, cv_rgb, cv::COLOR_BGRA2BGR);
 	//cv::imshow("rgb", cv_rgb);
 	//cv::waitKey(1);
 
-	cv::putText(cv_rgb, ss.str(), cv::Point2f(50, 500),
-	cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(0, 255, 0), 4, CV_AA);
+	//cv::putText(cv_rgb, ss.str(), cv::Point2f(50, 500),
+	//cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(0, 255, 0), 4, CV_AA);
 	cv::cvtColor(cv_rgb, cv_dst, cv::COLOR_BGR2BGRA);
 	return cv_dst.data;
 }
